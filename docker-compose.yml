@@ -1,0 +1,57 @@
+version: '3.4'
+
+services:
+
+  # Nginx
+  nginx:
+    container_name: dlv-nginx
+    image: nginx:latest
+    restart: always
+    ports:
+      - "8001:80"
+      - "443:443"
+    volumes:
+      - ./public:/var/www/html/public
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./docker/nginx/log:/var/log/nginx
+    depends_on:
+      - php
+    links:
+      - php
+    networks:
+      - dlv-docker-network
+
+  # PHP
+  php:
+    container_name: dlv-php
+    image: marcelofabianov/php-mysql
+    restart: always
+    working_dir: /var/www/html
+    ports:
+      - "9000:9000"
+    volumes:
+      - .:/var/www/html
+    networks: 
+      - dlv-docker-network
+
+  # Mysql
+  mysql:
+    container_name: dlv-mysql
+    image: mysql:latest
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_DATABASE: "dlv"
+      MYSQL_ROOT_PASSWORD: "secret"
+      MYSQL_USER: "my-user"
+      MYSQL_PASSWORD: "secret"
+    volumes:
+      - ./docker/mysql/data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - dlv-docker-network
+
+networks:
+  dlv-docker-network:
+    driver: bridge
