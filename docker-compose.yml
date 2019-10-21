@@ -31,7 +31,7 @@ services:
       - "9000:9000"
     volumes:
       - .:/var/www/html
-    networks: 
+    networks:
       - dlv-docker-network
 
   # Mysql
@@ -43,12 +43,23 @@ services:
     environment:
       MYSQL_DATABASE: "dlv"
       MYSQL_ROOT_PASSWORD: "secret"
-      MYSQL_USER: "my-user"
+      MYSQL_USER: "user"
       MYSQL_PASSWORD: "secret"
     volumes:
       - ./docker/mysql/data:/var/lib/mysql
     ports:
       - "3306:3306"
+    networks:
+      - dlv-docker-network
+
+  # Node
+  node:
+    container_name: dlv-node
+    image: node:12.4.0-stretch
+    command: "/bin/bash -c 'npm install && npm run dev && npm run watch'"
+    working_dir: /var/www/html
+    volumes:
+      - .:/var/www/html
     networks:
       - dlv-docker-network
 

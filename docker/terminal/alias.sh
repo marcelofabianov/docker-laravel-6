@@ -3,10 +3,13 @@
 # Load FISH Terminal
 # . {$PWD}/docker/terminal/alias.sh
 
+# Load Bash Terminal
+# source ${PWD}/docker/terminal/alias.sh
+
 ## Docker
 
-alias dlv-load='. {$PWD}/docker/terminal/alias.sh'
-alias dlv='cat {$PWD}/docker/terminal/alias.sh'
+alias dlv-load='source ${PWD}/docker/terminal/alias.sh'
+alias dlv='cat ${PWD}/docker/terminal/alias.sh'
 alias dlv-up='docker-compose up -d'
 alias dlv-w='docker-compose up'
 alias dlv-stop='docker-compose stop'
